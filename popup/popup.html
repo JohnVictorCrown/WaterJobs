@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WaterJobs</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="header-brand">
+        <img src="../assets/logo.png" alt="WaterJobs" class="header-logo" />
+        <h1>WaterJobs</h1>
+      </div>
+    </header>
+
+    <main>
+      <div class="controls">
+        <button id="scanBtn" class="btn-primary">Scan Page</button>
+        <div id="applyControls" style="display:none">
+          <label class="select-all-label" id="selectAllLabel">
+            <input type="checkbox" id="selectAllCheck" checked />
+            <span id="selectAllText">Select All</span>
+          </label>
+          <button id="startBatchBtn" class="btn-primary btn-green">Start Batch — Open Jobs</button>
+          <div id="batchStatus" class="batch-status" style="display:none">
+            <span id="batchLabel"></span>
+            <div class="batch-actions">
+              <button id="skipBtn" class="btn-skip">Skip</button>
+              <button id="stopBatch" class="btn-stop">Stop</button>
+            </div>
+          </div>
+        </div>
+        <span id="statusMessage"></span>
+      </div>
+      <div id="results">
+        <p class="empty-state">Click "Scan Page" to find Easy Apply jobs.</p>
+      </div>
+    </main>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

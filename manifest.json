@@ -1,0 +1,103 @@
+{
+  "manifest_version": 3,
+  "name": "WaterJobs",
+  "version": "1.0.0",
+  "description": "Find Easy Apply jobs on Indeed. Opens each job so you can apply manually — then automatically moves to the next once confirmed.",
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://*.indeed.com/*",
+    "*://indeed.com/*",
+    "*://*.indeed.co.uk/*",
+    "*://*.indeed.ca/*",
+    "*://*.indeed.com.br/*",
+    "*://*.indeed.com.mx/*",
+    "*://*.indeed.com.ar/*",
+    "*://*.indeed.com.co/*",
+    "*://*.indeed.com.pe/*",
+    "*://*.indeed.com.pt/*",
+    "*://*.indeed.de/*",
+    "*://*.indeed.fr/*",
+    "*://*.indeed.it/*",
+    "*://*.indeed.es/*",
+    "*://*.indeed.nl/*",
+    "*://*.indeed.ch/*",
+    "*://*.indeed.com.au/*",
+    "*://*.trabalhabrasil.com.br/*",
+    "*://trabalhabrasil.com.br/*"
+  ],
+  "commands": {
+    "skip-job": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Skip the current job and move to the next"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "WaterJobs"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.indeed.com/*",
+        "*://indeed.com/*",
+        "*://*.indeed.co.uk/*",
+        "*://*.indeed.ca/*",
+        "*://*.indeed.com.br/*",
+        "*://*.indeed.com.mx/*",
+        "*://*.indeed.com.ar/*",
+        "*://*.indeed.com.co/*",
+        "*://*.indeed.com.pe/*",
+        "*://*.indeed.com.pt/*",
+        "*://*.indeed.de/*",
+        "*://*.indeed.fr/*",
+        "*://*.indeed.it/*",
+        "*://*.indeed.es/*",
+        "*://*.indeed.nl/*",
+        "*://*.indeed.ch/*",
+        "*://*.indeed.com.au/*",
+        "*://*.trabalhabrasil.com.br/*",
+        "*://trabalhabrasil.com.br/*"
+      ],
+      "js": [
+        "content/adapters/BaseAdapter.js",
+        "trabalhaBrasil/TrabalhaBrasilEngine.js",
+        "content/adapters/TrabalhaBrasilAdapter.js",
+        "content/content.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://*.indeed.com/*",
+        "*://indeed.com/*",
+        "*://*.indeed.co.uk/*",
+        "*://*.indeed.ca/*",
+        "*://*.indeed.com.br/*",
+        "*://*.indeed.com.mx/*",
+        "*://*.indeed.com.ar/*",
+        "*://*.indeed.com.co/*",
+        "*://*.indeed.com.pe/*",
+        "*://*.indeed.com.pt/*",
+        "*://*.indeed.de/*",
+        "*://*.indeed.fr/*",
+        "*://*.indeed.it/*",
+        "*://*.indeed.es/*",
+        "*://*.indeed.nl/*",
+        "*://*.indeed.ch/*",
+        "*://*.indeed.com.au/*"
+      ],
+      "js": [
+        "content/adapters/BaseAdapter.js",
+        "indeed/IndeedEngine.js",
+        "content/adapters/IndeedAdapter.js",
+        "content/content.js"
+      ]
+    }
+  ]
+}
