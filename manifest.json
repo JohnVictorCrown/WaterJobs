@@ -25,7 +25,9 @@
     "*://*.indeed.ch/*",
     "*://*.indeed.com.au/*",
     "*://*.trabalhabrasil.com.br/*",
-    "*://trabalhabrasil.com.br/*"
+    "*://trabalhabrasil.com.br/*",
+    "*://*.workatastartup.com/*",
+    "*://workatastartup.com/*"
   ],
   "commands": {
     "skip-job": {
@@ -96,6 +98,18 @@
         "content/adapters/BaseAdapter.js",
         "indeed/IndeedEngine.js",
         "content/adapters/IndeedAdapter.js",
+        "content/content.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://*.workatastartup.com/*",
+        "*://workatastartup.com/*"
+      ],
+      "js": [
+        "content/adapters/BaseAdapter.js",
+        "yJobs/YJobsEngine.js",
+        "content/adapters/YJobsAdapter.js",
         "content/content.js"
       ]
     }

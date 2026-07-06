@@ -145,6 +145,28 @@
       return true;
     }
 
+    if (message.action === 'fill-application') {
+      if (!adapter || typeof adapter.fillApplication !== 'function') {
+        sendResponse({ filled: false, reason: 'No adapter or fillApplication not supported' });
+        return true;
+      }
+      adapter.fillApplication().then(result => {
+        sendResponse(result);
+      });
+      return true;
+    }
+
+    if (message.action === 'click-send') {
+      if (!adapter || typeof adapter.clickSend !== 'function') {
+        sendResponse({ clicked: false, reason: 'No adapter or clickSend not supported' });
+        return true;
+      }
+      adapter.clickSend().then(result => {
+        sendResponse(result);
+      });
+      return true;
+    }
+
     if (message.action === 'show-float-bar') {
       createFloatBar(message.label || 'WaterJobs');
       sendResponse({ ok: true });

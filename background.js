@@ -180,31 +180,65 @@ async function processNext() {
     return;
   }
 
-  console.log('[TRACE] content script loaded, sending click-apply');
-  // Step 1: Click "Me candidatar" on the job detail page.
-  // This triggers navigation to a separate apply form page.
-  const clickResult = await sendToTab(batchTabId, { action: 'click-apply' });
-  console.log('[TRACE] click-apply result:', JSON.stringify(clickResult));
+  // Determine the flow based on the job site
+  const isYJobs = (job.url || '').toLowerCase().includes('workatastartup');
+  const isTrabalhaBrasil = (job.url || '').toLowerCase().includes('trabalhabrasil');
 
-  // Step 2: Wait for navigation to the apply form page.
-  // After clicking "Me candidatar", the page navigates to a new URL.
-  // The old content script is destroyed; we wait for the new one to load.
-  if (clickResult && clickResult.clicked) {
-    console.log('[TRACE] waiting for navigation to apply form...');
-    // Give a moment for navigation to start
-    await new Promise(r => setTimeout(r, 1500));
-    // Wait for the content script to re-load on the new page
-    const formReady = await waitForContentScript(batchTabId, 20000);
-    if (formReady) {
-      console.log('[TRACE] apply form loaded, sending click-submit');
-      const submitResult = await sendToTab(batchTabId, { action: 'click-submit' });
-      console.log('[TRACE] click-submit result:', JSON.stringify(submitResult));
+  if (isYJobs) {
+    // === Work at a Startup flow ===
+    console.log('[TRACE] yJobs flow: clicking Apply');
+    const clickResult = await sendToTab(batchTabId, { action: 'click-apply' });
+    console.log('[TRACE] yJobs click-apply result:', JSON.stringify(clickResult));
 
-      // Settle delay after form submission — lets the confirmation page render
+    if (clickResult && clickResult.clicked) {
+      // Wait for the apply modal to render
+      console.log('[TRACE] yJobs flow: waiting for modal...');
       await new Promise(r => setTimeout(r, 3000));
+
+      // Fill the cover letter textarea (text is hardcoded in the engine)
+      console.log('[TRACE] yJobs flow: sending fill-application');
+      const fillResult = await sendToTab(batchTabId, { action: 'fill-application' });
+      console.log('[TRACE] yJobs fill-application result:', JSON.stringify(fillResult));
+
+      if (fillResult && fillResult.filled) {
+        // Brief pause for React to process the textarea change and enable the Send button
+        await new Promise(r => setTimeout(r, 1000));
+
+        // Click the Send button
+        console.log('[TRACE] yJobs flow: sending click-send');
+        const sendResult = await sendToTab(batchTabId, { action: 'click-send' });
+        console.log('[TRACE] yJobs click-send result:', JSON.stringify(sendResult));
+
+        // Settle delay after submission
+        await new Promise(r => setTimeout(r, 3000));
+      } else {
+        console.log('[TRACE] yJobs flow: textarea not found, skipping send');
+      }
     } else {
-      console.log('[TRACE] apply form content script did not load (timeout)');
+      console.log('[TRACE] yJobs flow: Apply button not found (already applied?), continuing to poll');
     }
+  } else if (isTrabalhaBrasil) {
+    // === Trabalha Brasil flow (existing) ===
+    console.log('[TRACE] content script loaded, sending click-apply');
+    const clickResult = await sendToTab(batchTabId, { action: 'click-apply' });
+    console.log('[TRACE] click-apply result:', JSON.stringify(clickResult));
+
+    if (clickResult && clickResult.clicked) {
+      console.log('[TRACE] waiting for navigation to apply form...');
+      await new Promise(r => setTimeout(r, 1500));
+      const formReady = await waitForContentScript(batchTabId, 20000);
+      if (formReady) {
+        console.log('[TRACE] apply form loaded, sending click-submit');
+        const submitResult = await sendToTab(batchTabId, { action: 'click-submit' });
+        console.log('[TRACE] click-submit result:', JSON.stringify(submitResult));
+        await new Promise(r => setTimeout(r, 3000));
+      } else {
+        console.log('[TRACE] apply form content script did not load (timeout)');
+      }
+    }
+  } else {
+    // === Indeed or other sites (no auto-apply, just poll) ===
+    console.log('[TRACE] no auto-apply flow for this site, going straight to polling');
   }
 
   console.log('[TRACE] showing float bar, starting poll');

@@ -47,7 +47,7 @@ async function findJobSiteTab() {
   // First check the active tab in the focused window
   const active = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
   const activeUrl = active[0]?.url?.toLowerCase() || '';
-  if (activeUrl.includes('indeed.com') || activeUrl.includes('trabalhabrasil.com.br')) {
+  if (activeUrl.includes('indeed.com') || activeUrl.includes('trabalhabrasil.com.br') || activeUrl.includes('workatastartup.com')) {
     return active[0];
   }
   // Fallback: search all windows for any supported job site tab
@@ -55,7 +55,9 @@ async function findJobSiteTab() {
     '*://*.indeed.com/*',
     '*://indeed.com/*',
     '*://*.trabalhabrasil.com.br/*',
-    '*://trabalhabrasil.com.br/*'
+    '*://trabalhabrasil.com.br/*',
+    '*://*.workatastartup.com/*',
+    '*://workatastartup.com/*'
   ];
   for (const pattern of patterns) {
     const tabs = await chrome.tabs.query({ url: pattern });
